@@ -96,7 +96,7 @@ public class XmlAuditedPropertiesReader {
 		if ( audited == null && declaredAuditedSuperclasses.contains( clazz ) ) {
 			// TODO: WHAT HAS TO BE DONE HERE ???
 		}
-		return null;
+		return audited;
 	}
 
 	private void addPropertiesFromClass(ClazzType clazz, Set<ClazzType> declaredAuditedSuperclasses) {
@@ -285,7 +285,7 @@ public class XmlAuditedPropertiesReader {
 			for ( AuditParent auditParent : clazz.getAudited().getAuditParent() ) {
 				ClazzType parentClazz = XmlConfigurationTools.getClazzForName( auditParent.getClassName(),
 						em.getEntity() );
-				// TODO: CHECK ON ASSIGNABILITY TO BE SURE THAT EVERYTHIN IS CONFIGURED RIGHT
+				// TODO: CHECK ON ASSIGNABILITY TO BE SURE THAT EVERYTHING IS CONFIGURED RIGHT
 				declaredAuditedSuperclasses.add( clazz );
 			}
 		}
