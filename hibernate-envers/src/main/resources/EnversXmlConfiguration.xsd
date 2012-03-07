@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:element name="envers-mapping" type="EnversMappingType" />
+
+	<xsd:complexType name="EnversMappingType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				This schema defines the interface for configuring Envers per Xml.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="entity" type="ClazzType" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ClazzType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Envers configuration for a persistence class.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="audited" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="auditTable" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="revisionEntity" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="secondaryAuditTable" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="secondaryAuditTables" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="property" type="PropertyType" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element name="component" type="ComponentType" minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+		<xsd:attribute name="name" use="required" type="xsd:string" />
+		<xsd:attribute name="parent" use="optional" type="xsd:string" />
+	</xsd:complexType>
+
+	<xsd:complexType name="PropertyType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Envers configuration for a property of persistence class.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="audited" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="auditJoinTable" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="auditMappedBy" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="auditOverride" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="auditOverrides" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="notAudited" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="mapKey" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="version" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="revisionNumber" minOccurs="0" maxOccurs="1" />
+			<xsd:element ref="revisionTimestamp" minOccurs="0" maxOccurs="1" />
+		</xsd:sequence>
+		<xsd:attribute name="name" use="required" type="xsd:string" />
+		<xsd:attribute name="propertyAccessorName" use="optional" type="xsd:string" default="property" />
+	</xsd:complexType>
+
+	<xsd:complexType name="ComponentType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				This Element represents the hibernate 'component' element (also known under the term embedded value)
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="property" type="PropertyType" minOccurs="1" maxOccurs="1" />
+			<xsd:element name="entity" type="ClazzType" minOccurs="1" maxOccurs="1" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- ################################################################################ -->
+	<!-- ########################### Envers Annotation Elements ######################### -->
+	<!-- ################################################################################ -->
+	<xsd:element name="audited">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @Audited annotation.
+				Class and Property Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="auditParent" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="modStore" use="optional" type="xsd:string" default="FULL" />
+			<xsd:attribute name="relationTargetAuditMode" use="optional" type="xsd:string" default="AUDITED" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditParent">
+		<xsd:complexType>
+			<xsd:attribute name="className" use="required" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditJoinTable">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @AuditJoinTable annotation.
+				Property Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="joinColumn" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="name" use="optional" type="xsd:string" default="" />
+			<xsd:attribute name="schema" use="optional" type="xsd:string" default="" />
+			<xsd:attribute name="catalog" use="optional" type="xsd:string" default="" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditMappedBy">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @AuditMappedBy annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="mappedBy" use="optional" type="xsd:string" />
+			<xsd:attribute name="positionMappedBy" use="optional" type="xsd:string" default="" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditOverride">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @AuditOverride annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="auditJoinTable" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attribute name="name" use="optional" type="xsd:string" />
+			<xsd:attribute name="isAudited" use="optional" type="xsd:boolean" default="true" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditOverrides">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @AuditOverride annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="auditOverride" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="auditTable">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @AuditTable annotation.
+				Class Scope
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="value" use="required" type="xsd:string" />
+			<xsd:attribute name="schema" use="optional" type="xsd:string" default="" />
+			<xsd:attribute name="catalog" use="optional" type="xsd:string" default="" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="notAudited">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @NotAudited annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="revisionEntity">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @RevisionEntity annotation.
+				Class Scope
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="revisionListener" minOccurs="0" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="revisionListener">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Configuration of the RevisionListener for the RevisionEntity
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="value" use="required" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="revisionNumber">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @RevisionNumber annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="revisionTimestamp">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @RevisionTimestamp annotation.
+				Property Scope
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="joinColumn">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en" source="">
+				Xml configuration for the @JoinColumn annotation. Its from Javax-Persistence. Neede by @AuditJoinTable
+				ToDo: CHECK THE DEFAULT VALUES
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="columnDefinition" use="optional" type="xsd:string" />
+			<xsd:attribute name="insertable" use="optional" type="xsd:boolean" />
+			<xsd:attribute name="name" use="optional" type="xsd:string" />
+			<xsd:attribute name="nullable" use="optional" type="xsd:boolean" />
+			<xsd:attribute name="referencedColumnName" use="optional" type="xsd:string" />
+			<xsd:attribute name="table" use="optional" type="xsd:string" />
+			<xsd:attribute name="unique" use="optional" type="xsd:boolean" />
+			<xsd:attribute name="updatable" use="optional" type="xsd:boolean" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="secondaryAuditTable">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @SecondaryAuditTable annotation.
+				Class Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="secondaryTableName" use="required" type="xsd:string" />
+			<xsd:attribute name="secondaryAuditTableName" use="required" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="secondaryAuditTables">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @SecondaryAuditTables annotation.
+				Class Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="secondaryAuditTable" minOccurs="1" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="mapKey">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @MapKey annotation.
+				Property Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="name" use="required" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="version">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				Xml configuration for the @Version annotation.
+				Property Scope.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

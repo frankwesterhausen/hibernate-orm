@@ -46,6 +46,12 @@ public class GlobalConfiguration {
 
     // The default name of the catalog of the audit tables.
     private final String defaultCatalogName;
+    
+    // Use the xml or annotation configuration 
+    private final boolean useXmlConfig;
+
+    // The path to the xml configuration file 
+	private final String xmlConfigPath;
 
     /*
      Which operator to use in correlated subqueries (when we want a property to be equal to the result of
@@ -73,6 +79,11 @@ public class GlobalConfiguration {
                 "org.hibernate.envers.storeDataAtDelete",
                 "false");
 		storeDataAtDelete = Boolean.parseBoolean(storeDataDeletedEntityStr);
+		
+		String useXmlConfigStr = properties.getProperty( "org.hibernate.envers.use_xml_config", "false" );
+		useXmlConfig = Boolean.parseBoolean( useXmlConfigStr );
+
+		xmlConfigPath = properties.getProperty( "org.hibernate.envers.xml_config_path", null );
 
         defaultSchemaName = properties.getProperty("org.hibernate.envers.default_schema", null);
         defaultCatalogName = properties.getProperty("org.hibernate.envers.default_catalog", null);
@@ -104,4 +115,12 @@ public class GlobalConfiguration {
     public String getDefaultCatalogName() {
         return defaultCatalogName;
     }
+    
+    public boolean isUseXmlConfig() {
+		return useXmlConfig;
+	}
+
+	public String getXmlConfigPath() {
+		return xmlConfigPath;
+	}
 }

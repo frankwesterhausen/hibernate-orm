@@ -33,6 +33,7 @@ import org.hibernate.envers.*;
 import org.hibernate.envers.entities.PropertyData;
 import org.hibernate.envers.configuration.metadata.MetadataTools;
 import org.hibernate.envers.configuration.metadata.AuditTableData;
+import org.hibernate.envers.configuration.metadata.RevisionInfoConfigurationResult;
 import org.hibernate.envers.revisioninfo.DefaultRevisionInfoGenerator;
 import org.hibernate.envers.revisioninfo.RevisionInfoGenerator;
 import org.hibernate.envers.revisioninfo.RevisionInfoNumberReader;
@@ -253,63 +254,4 @@ public class RevisionInfoConfiguration {
     	String typename = revisionInfoTimestampType.getName();
     	return "date".equals(typename) || "time".equals(typename) || "timestamp".equals(typename);
     }
-}
-
-class RevisionInfoConfigurationResult {
-    private final RevisionInfoGenerator revisionInfoGenerator;
-    private final Document revisionInfoXmlMapping;
-    private final RevisionInfoQueryCreator revisionInfoQueryCreator;
-    private final Element revisionInfoRelationMapping;
-    private final RevisionInfoNumberReader revisionInfoNumberReader;
-    private final String revisionInfoEntityName;
-    private final Class<?> revisionInfoClass;
-    private final PropertyData revisionInfoTimestampData;
-
-    RevisionInfoConfigurationResult(RevisionInfoGenerator revisionInfoGenerator,
-                                    Document revisionInfoXmlMapping, RevisionInfoQueryCreator revisionInfoQueryCreator,
-                                    Element revisionInfoRelationMapping,
-                                    RevisionInfoNumberReader revisionInfoNumberReader, String revisionInfoEntityName,  Class<?> revisionInfoClass,
-                                    PropertyData revisionInfoTimestampData) {
-        this.revisionInfoGenerator = revisionInfoGenerator;
-        this.revisionInfoXmlMapping = revisionInfoXmlMapping;
-        this.revisionInfoQueryCreator = revisionInfoQueryCreator;
-        this.revisionInfoRelationMapping = revisionInfoRelationMapping;
-        this.revisionInfoNumberReader = revisionInfoNumberReader;
-        this.revisionInfoEntityName = revisionInfoEntityName;
-        this.revisionInfoClass = revisionInfoClass;
-        this.revisionInfoTimestampData = revisionInfoTimestampData;
-    }
-
-    public RevisionInfoGenerator getRevisionInfoGenerator() {
-        return revisionInfoGenerator;
-    }
-
-    public Document getRevisionInfoXmlMapping() {
-        return revisionInfoXmlMapping;
-    }
-
-    public RevisionInfoQueryCreator getRevisionInfoQueryCreator() {
-        return revisionInfoQueryCreator;
-    }
-
-    public Element getRevisionInfoRelationMapping() {
-        return revisionInfoRelationMapping;
-    }
-
-    public RevisionInfoNumberReader getRevisionInfoNumberReader() {
-        return revisionInfoNumberReader;
-    }
-
-    public String getRevisionInfoEntityName() {
-        return revisionInfoEntityName;
-    }
-
-	public Class<?> getRevisionInfoClass() {
-		return revisionInfoClass;
-	}
-
-	public PropertyData getRevisionInfoTimestampData() {
-		return revisionInfoTimestampData;
-	}
-
 }

@@ -40,6 +40,9 @@ import org.dom4j.io.XMLWriter;
 import org.hibernate.envers.configuration.metadata.reader.AnnotationsMetadataReader;
 import org.hibernate.envers.configuration.metadata.EntityXmlMappingData;
 import org.hibernate.envers.configuration.metadata.reader.ClassAuditingData;
+import org.hibernate.envers.configuration.metadata.xml.XmlConfigurationTools;
+import org.hibernate.envers.configuration.metadata.xml.XmlMetadataReader;
+import org.hibernate.envers.configuration.metadata.xml.jaxb.EnversMappingType;
 import org.hibernate.envers.configuration.metadata.AuditMetadataGenerator;
 import org.hibernate.envers.configuration.metadata.AuditEntityNameRegister;
 import org.hibernate.envers.entities.EntitiesConfigurations;
@@ -70,17 +73,35 @@ public class EntitiesConfigurator {
         ClassesAuditingData classesAuditingData = new ClassesAuditingData();
         Map<PersistentClass, EntityXmlMappingData> xmlMappings = new HashMap<PersistentClass, EntityXmlMappingData>();
 
-        // Reading metadata from annotations
-        while (classes.hasNext()) {
-            PersistentClass pc = classes.next();
+        // READ THE XML CONFIGURATION IF NECESSARY:
+     	EnversMappingType em = null;
+ 		if ( globalCfg.isUseXmlConfig() ) {
+ 			em = XmlConfigurationTools.readEnversMapping( globalCfg.getXmlConfigPath() );
+ 		}
 
-            // Collecting information from annotations on the persistent class pc
-            AnnotationsMetadataReader annotationsMetadataReader =
-                    new AnnotationsMetadataReader(globalCfg, reflectionManager, pc);
-            ClassAuditingData auditData = annotationsMetadataReader.getAuditData();
-
-            classesAuditingData.addClassAuditingData(pc, auditData);
-        }
+ 		// Reading metadata from annotations
+ 		while ( classes.hasNext() ) {
+ 			PersistentClass pc = classes.next();
+ 			// Collecting information from annotations on the persistent class pc
+ 			ClassAuditingData auditData = null;
+ 			// USE XML OR ANNOTATION CONFIG
+ 			if ( globalCfg.isUseXmlConfig() ) {
+ 				XmlMetadataReader xmlMetadataReader = new XmlMetadataReader( globalCfg, reflectionManager, pc, em );
+ 				auditData = xmlMetadataReader.getAuditData();
+ 			}
+ 			else {
+ 				AnnotationsMetadataReader annotationsMetadataReader = new AnnotationsMetadataReader( globalCfg,
+ 						reflectionManager, pc );
+ 				auditData = annotationsMetadataReader.getAuditData();
+ 			}
+ 			if ( globalCfg.isUseXmlConfig() ) {
+ 				if ( !XmlConfigurationTools.isRevisionEntity( pc, em ) )
+ 					classesAuditingData.addClassAuditingData( pc, auditData );
+ 			}
+ 			else {
+ 				classesAuditingData.addClassAuditingData( pc, auditData );
+ 			}
+ 		}
 
         // Now that all information is read we can update the calculated fields.
         classesAuditingData.updateCalculatedFields();
