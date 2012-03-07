@@ -58,7 +58,7 @@ public class XmlMetadataReader {
 	}
 
 	private ModificationStore getDefaultAudited(ClazzType clazz) {
-		if ( !( clazz.getAudited() != null ) ) {
+		if ( clazz.getAudited() != null ) {
 			return ModificationStore.FULL;
 		}
 		else {
